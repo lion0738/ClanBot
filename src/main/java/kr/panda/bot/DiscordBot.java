@@ -37,7 +37,7 @@ import net.dv8tion.jda.api.utils.ChunkingFilter;
 import net.dv8tion.jda.api.utils.MemberCachePolicy;
 import net.dv8tion.jda.api.utils.cache.CacheFlag;
 
-// 봇 초대 - https://discordapp.com/oauth2/authorize?client_id=1283367517456306230&scope=bot&permissions=354368
+// 봇 초대 - https://discordapp.com/oauth2/authorize?client_id=1283367517456306230&scope=applications.commands%20bot&permissions=73728
 public class DiscordBot extends ListenerAdapter {
 	private static JDA sJDA;
 
