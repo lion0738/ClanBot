@@ -60,12 +60,13 @@ public class ClanWarSelector extends Selector<ClanMapData> {
 		Song song = mapData.getLeaderboard().getSong();
 		String songName = song.getName();
 		Difficulty difficulty = mapData.getLeaderboard().getDifficulty();
+		String modeName = difficulty.getModeName();
 		String difficultyName = difficulty.getDifficultyName();
 		double star = difficulty.getStars();
 		double remainPp = mapData.getPp();
 
-		return MessageFormat.format("{0,number,#.#pp} / {1} - {2} ({3,number,#.#★})",
-				remainPp, songName, difficultyName, star);
+		return MessageFormat.format("{0,number,#.#pp} / {1} - {2} {3} ({4,number,#.#★})",
+				remainPp, songName, modeName, difficultyName, star);
 	}
 
 	@Override

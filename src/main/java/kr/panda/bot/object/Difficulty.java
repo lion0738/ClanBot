@@ -15,6 +15,9 @@ public class Difficulty {
 	@SerializedName("difficultyName")
 	private String mDifficultyName;
 
+	@SerializedName("modeName")
+	private String mModeName;
+
 	@SerializedName("modifiersRating")
 	private ModifiersRating mModifiersRating;
 
@@ -47,6 +50,10 @@ public class Difficulty {
 
 	public String getDifficultyName() {
 		return mDifficultyName;
+	}
+
+	public String getModeName() {
+		return mModeName;
 	}
 
 	public ModifiersRating getModifiersRating() {

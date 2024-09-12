@@ -76,7 +76,7 @@ public class ClanWarViewer extends BaseViewer {
 		Song song = mMapData.getLeaderboard().getSong();
 		Difficulty difficulty = mMapData.getLeaderboard().getDifficulty();
 		mapEmbedBuilder.setThumbnail(song.getCoverImage());
-		mapEmbedBuilder.setTitle(MessageFormat.format("{0} - {1}", song.getName(), difficulty.getDifficultyName()));
+		mapEmbedBuilder.setTitle(MessageFormat.format("{0} - {1} {2}", song.getName(), difficulty.getModeName(), difficulty.getDifficultyName()));
 		mapEmbedBuilder.setUrl(MessageFormat.format(BEATSAVER_URL, song.getId().substring(0, 5)));
 
 		double requiredPp = mMapLeaderboardData.getPp() - mMapData.getPp();
@@ -88,8 +88,8 @@ public class ClanWarViewer extends BaseViewer {
 		mapEmbedBuilder.addField("Map Info", mapInfoBuilder.toString(), false);
 
 		StringBuilder clanInfoBuilder = new StringBuilder();
-		clanInfoBuilder.append(MessageFormat.format("Clan PP: {0}\n", mMapLeaderboardData.getPp()));
 		clanInfoBuilder.append(MessageFormat.format("Clan Rank: #{0}\n", mMapData.getRank()));
+		clanInfoBuilder.append(MessageFormat.format("Clan PP: {0}\n", mMapLeaderboardData.getPp()));
 		clanInfoBuilder.append(MessageFormat.format("Average Rank: #{0}\n", mMapData.getAverageRank()));
 		clanInfoBuilder.append(MessageFormat.format("Average Acc: {0, number, #.#}%\n", mMapData.getAverageAccuracy() * 100));
 		clanInfoBuilder.append(MessageFormat.format("Total Score: {0}\n", mMapData.getTotalScore()));
@@ -112,7 +112,7 @@ public class ClanWarViewer extends BaseViewer {
 
 	private MessageEmbed getClanLeaderboardEmbed() {
 		EmbedBuilder clanLeaderboardEmbedBuilder = new EmbedBuilder();
-		clanLeaderboardEmbedBuilder.setTitle("Map Leaderboard");
+		clanLeaderboardEmbedBuilder.setTitle("Clan Leaderboard");
 		List<AssociatedScore> scoreList = mMapLeaderboardData.getAssociatedScores();
 		double requiredPp = mMapLeaderboardData.getPp() - mMapData.getPp();
 		for (int i = mCurrentPage * 5; i < mCurrentPage * 5 + 5 && i < scoreList.size(); i++) {
@@ -132,8 +132,7 @@ public class ClanWarViewer extends BaseViewer {
 			if (!score.getModifiers().equals("")) {
 				playInfoBuilder.append(MessageFormat.format(", {0}", score.getModifiers()));
 			}
-			playInfoBuilder.append(")\n");
-			playInfoBuilder.append(MessageFormat.format("Last Played: <t:{0,number,#}>\n", score.getTimeset()));
+			playInfoBuilder.append(MessageFormat.format(") - <t:{0,number,#}>\n", score.getTimeset()));
 			playInfoBuilder.append(MessageFormat.format("To Conquer: {0,number,#.##}pp ({1,number,#.#}%, FS: {2,number,#.#}%, SF: {3,number,#.#}%)",
 					targetPp, requiredAcc * 100, requiredFsAcc * 100, requiredSfAcc * 100));
 			clanLeaderboardEmbedBuilder.addField(MessageFormat.format("#{0} {1}",
