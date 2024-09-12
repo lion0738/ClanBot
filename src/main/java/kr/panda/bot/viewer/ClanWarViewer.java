@@ -142,6 +142,8 @@ public class ClanWarViewer extends BaseViewer {
 
 		clanLeaderboardEmbedBuilder.setUrl(MessageFormat.format(BEATLEADER_URL,
 				mMapData.getLeaderboardId(), mMapLeaderboardData.getClan().getTag()));
+		clanLeaderboardEmbedBuilder.setFooter(
+				MessageFormat.format("({0}/{1})", mCurrentPage + 1, mMaxPage + 1));
 		return clanLeaderboardEmbedBuilder.build();
 	}
 
