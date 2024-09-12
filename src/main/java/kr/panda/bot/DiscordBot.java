@@ -12,7 +12,8 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
 import kr.panda.bot.moderator.IModerator;
-import kr.panda.bot.utils.WebServer;
+import kr.panda.bot.utils.BeatLeaderAPIHelper;
+import kr.panda.bot.utils.DatabaseHelper;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDA.Status;
 import net.dv8tion.jda.api.JDABuilder;
@@ -80,7 +81,9 @@ public class DiscordBot extends ListenerAdapter {
 			mSlash = new SlashProcessor(mBackgroundWorker);
 		}
 
-		WebServer.initialize(mBackgroundWorker);
+		DatabaseHelper.initialize();
+		BeatLeaderAPIHelper.initialize();
+		ClanWarNotifier.initialize(mBackgroundWorker);
 
 		List<GatewayIntent> intents = new ArrayList<GatewayIntent>();
 		intents.add(GatewayIntent.DIRECT_MESSAGES);
@@ -147,7 +150,6 @@ public class DiscordBot extends ListenerAdapter {
 		System.out.println("접속된 서버 수: " + guilds.size());
 
 		mSlash.initialize();
-		//mBackgroundWorker.execute(() -> loadChannels());
 	}
 
 	@Override
@@ -157,7 +159,6 @@ public class DiscordBot extends ListenerAdapter {
 			moderator.shutdown();
 		}
 		mModerators.clear();
-		//loadChannels();
 	}
 
 	@Override

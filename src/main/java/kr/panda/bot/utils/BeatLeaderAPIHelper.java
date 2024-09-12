@@ -5,7 +5,9 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.text.MessageFormat;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import com.google.gson.Gson;
 
@@ -18,6 +20,45 @@ public class BeatLeaderAPIHelper {
 	private static final String CLAN_CONQUER_URL = BEATLEADER_API_URL + "/clan/{0}/maps?page=1&count=100&sortBy=toconquer";
 	private static final String CLAN_MAP_LEADERBOARD_URL = BEATLEADER_API_URL + "/leaderboard/clanRankings/{0}/clan/{1}?page=1&count=100";
 	private static Gson sGson = new Gson();
+
+	private static Map<String, String> sGuildClanMap;
+
+	public static void initialize() {
+		loadDefaultClans();
+	}
+
+	private static void loadDefaultClans() {
+		sGuildClanMap = new HashMap<>();
+
+		List<Map<String, String>> list = DatabaseHelper.getRows("ClanList");
+		for (Map<String, String> channelMap : list) {
+			String guildId = channelMap.get("GuildId");
+			String tagName = channelMap.get("ClanTag");
+
+			sGuildClanMap.put(guildId, tagName);
+		}
+	}
+
+	public static boolean setDefaultClanName(String guildId, String clanTag) {
+		if (clanTag != null) {
+			Map<String, String> target = new HashMap<>();
+			target.put("GuildId", guildId);
+			target.put("ClanTag", clanTag);
+			DatabaseHelper.addRow("ClanList", target);
+			sGuildClanMap.put(guildId, clanTag);
+			return true;
+		} else if (sGuildClanMap.containsKey(guildId)) {
+			DatabaseHelper.deleteRow("ClanList", "GuildId", guildId);
+			sGuildClanMap.remove(guildId);
+			return true;
+		}
+
+		return false;
+	}
+
+	public static String getDefaultClanName(String guildId) {
+		return sGuildClanMap.get(guildId);
+	}
 
 	public static List<ClanMapData> getClanMaps(String clanId) {
 		String url = MessageFormat.format(CLAN_CONQUER_URL, clanId);
