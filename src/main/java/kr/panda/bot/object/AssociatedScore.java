@@ -42,6 +42,9 @@ public class AssociatedScore {
 	@SerializedName("player")
 	private Player mPlayer;
 
+	@SerializedName("timeset")
+	private long mTimeset;
+
 	public int getId() {
 		return mId;
 	}
@@ -92,5 +95,9 @@ public class AssociatedScore {
 
 	public Player getPlayer() {
 		return mPlayer;
+	}
+
+	public long getTimeset() {
+		return mTimeset;
 	}
 }

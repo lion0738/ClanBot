@@ -77,28 +77,35 @@ public class ClanWarViewer extends BaseViewer {
 		Difficulty difficulty = mMapData.getLeaderboard().getDifficulty();
 		mapEmbedBuilder.setThumbnail(song.getCoverImage());
 		mapEmbedBuilder.setTitle(MessageFormat.format("{0} - {1}", song.getName(), difficulty.getDifficultyName()));
-		mapEmbedBuilder.setDescription(MessageFormat.format("Mappers: {0}\n", song.getMapper()));
-		mapEmbedBuilder.appendDescription(MessageFormat.format("Stars: {0,number,#.##}★\n", difficulty.getStars()));
-		mapEmbedBuilder.appendDescription(MessageFormat.format("Pass: {0,number,#.##}★ Acc: {1,number,#.##}★ Tech: {2,number,#.##}★\n",
-				difficulty.getPassRating(), difficulty.getAccRating(), difficulty.getTechRating()));
-		mapEmbedBuilder.appendDescription("\n");
+		mapEmbedBuilder.setUrl(MessageFormat.format(BEATSAVER_URL, song.getId().substring(0, 5)));
 
 		double requiredPp = mMapLeaderboardData.getPp() - mMapData.getPp();
+		StringBuilder mapInfoBuilder = new StringBuilder();
+		mapInfoBuilder.append(MessageFormat.format("Mappers: {0}\n", song.getMapper()));
+		mapInfoBuilder.append(MessageFormat.format("Stars: {0,number,#.##}★\n", difficulty.getStars()));
+		mapInfoBuilder.append(MessageFormat.format("Pass: {0,number,#.##}★ Acc: {1,number,#.##}★ Tech: {2,number,#.##}★\n",
+				difficulty.getPassRating(), difficulty.getAccRating(), difficulty.getTechRating()));
+		mapEmbedBuilder.addField("Map Info", mapInfoBuilder.toString(), false);
+
+		StringBuilder clanInfoBuilder = new StringBuilder();
+		clanInfoBuilder.append(MessageFormat.format("Clan PP: {0}\n", mMapLeaderboardData.getPp()));
+		clanInfoBuilder.append(MessageFormat.format("Clan Rank: #{0}\n", mMapData.getRank()));
+		clanInfoBuilder.append(MessageFormat.format("Average Rank: #{0}\n", mMapData.getAverageRank()));
+		clanInfoBuilder.append(MessageFormat.format("Average Acc: {0, number, #.#}%\n", mMapData.getAverageAccuracy() * 100));
+		clanInfoBuilder.append(MessageFormat.format("Total Score: {0}\n", mMapData.getTotalScore()));
+		mapEmbedBuilder.addField("Clan Info", clanInfoBuilder.toString(), false);
+
 		ModifiersRating modifiers = difficulty.getModifiersRating();
 		double targetPp = Util.calculateRequiredPp(mMapLeaderboardData.getAssociatedScores(), null, requiredPp);
 		double requiredAcc = Util.calculateAcc(targetPp, difficulty.getAccRating(), difficulty.getPassRating(), difficulty.getTechRating());
 		double requiredFsAcc = Util.calculateAcc(targetPp, modifiers.getFsAccRating(), modifiers.getFsPassRating(), modifiers.getFsTechRating());
 		double requiredSfAcc = Util.calculateAcc(targetPp, modifiers.getSfAccRating(), modifiers.getSfPassRating(), modifiers.getSfTechRating());
-
-		mapEmbedBuilder.appendDescription(MessageFormat.format("Current PP: {0}\n", mMapLeaderboardData.getPp()));
-		mapEmbedBuilder.appendDescription(MessageFormat.format("To Conquer: {0} "
-				+ "({1,number,#.##pp} - {2,number,#.#}%, FS: {3,number,#.#}%, SF: {4,number,#.#}%)\n",
-				mMapData.getPp(), targetPp, requiredAcc * 100, requiredFsAcc * 100, requiredSfAcc * 100));
-		mapEmbedBuilder.appendDescription(MessageFormat.format("Clan Rank: #{0}\n", mMapData.getRank()));
-		mapEmbedBuilder.appendDescription(MessageFormat.format("Average Rank: #{0}\n", mMapData.getAverageRank()));
-		mapEmbedBuilder.appendDescription(MessageFormat.format("Average Acc: {0, number, #.#}%\n", mMapData.getAverageAccuracy() * 100));
-		mapEmbedBuilder.appendDescription(MessageFormat.format("Total Score: {0}\n", mMapData.getTotalScore()));
-		mapEmbedBuilder.setUrl(MessageFormat.format(BEATSAVER_URL, song.getId().substring(0, 5)));
+		StringBuilder conquerInfoBuilder = new StringBuilder();
+		conquerInfoBuilder.append(MessageFormat.format("Diff from #1: {0,number,#.##pp}\n", mMapData.getPp()));
+		conquerInfoBuilder.append(MessageFormat.format("New Play Required: "
+				+ "{0,number,#.##pp} ({1,number,#.#}%, FS: {2,number,#.#}%, SF: {3,number,#.#}%)\n",
+				targetPp, requiredAcc * 100, requiredFsAcc * 100, requiredSfAcc * 100));
+		mapEmbedBuilder.addField("To Conquer", conquerInfoBuilder.toString(), false);
 
 		return mapEmbedBuilder.build();
 	}
@@ -117,17 +124,22 @@ public class ClanWarViewer extends BaseViewer {
 			double requiredFsAcc = Util.calculateAcc(targetPp, modifiers.getFsAccRating(), modifiers.getFsPassRating(), modifiers.getFsTechRating());
 			double requiredSfAcc = Util.calculateAcc(targetPp, modifiers.getSfAccRating(), modifiers.getSfPassRating(), modifiers.getSfTechRating());
 
+			StringBuilder playInfoBuilder = new StringBuilder();
 			int misses = score.getMissedNotes() + score.getBombCuts() + score.getBadCuts();
 			String missString = misses == 0 ? "FC" : misses + "X";
+			playInfoBuilder.append(MessageFormat.format("Score: {0,number,#.##pp} ({1,number,#.#}%, {2}",
+					score.getPp(), score.getAccuracy() * 100, missString));
+			if (!score.getModifiers().equals("")) {
+				playInfoBuilder.append(MessageFormat.format(", {0}", score.getModifiers()));
+			}
+			playInfoBuilder.append(")\n");
+			playInfoBuilder.append(MessageFormat.format("Last Played: <t:{0,number,#}>\n", score.getTimeset()));
+			playInfoBuilder.append(MessageFormat.format("To Conquer: {0,number,#.##}pp ({1,number,#.#}%, FS: {2,number,#.#}%, SF: {3,number,#.#}%)",
+					targetPp, requiredAcc * 100, requiredFsAcc * 100, requiredSfAcc * 100));
 			clanLeaderboardEmbedBuilder.addField(MessageFormat.format("#{0} {1}",
-					score.getRank(), score.getPlayer().getName()),
-					MessageFormat.format("{0,number,#.#}%, {1}, {2,number,#.##pp} {3}\n"
-							+ "To Conquer: {4,number,#.##}pp ({5,number,#.#}%, FS: {6,number,#.#}%, SF: {7,number,#.#}%)",
-							score.getAccuracy() * 100, missString, score.getPp(),
-							score.getModifiers(), targetPp, requiredAcc * 100,
-							requiredFsAcc * 100, requiredSfAcc * 100), false);
-			
+					score.getRank(), score.getPlayer().getName()), playInfoBuilder.toString(), false);
 		}
+
 		clanLeaderboardEmbedBuilder.setUrl(MessageFormat.format(BEATLEADER_URL,
 				mMapData.getLeaderboardId(), mMapLeaderboardData.getClan().getTag()));
 		return clanLeaderboardEmbedBuilder.build();
