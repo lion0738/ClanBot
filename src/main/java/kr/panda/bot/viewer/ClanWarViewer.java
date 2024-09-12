@@ -12,7 +12,7 @@ import kr.panda.bot.object.ModifiersRating;
 import kr.panda.bot.object.Song;
 import kr.panda.bot.utils.BeatLeaderAPIHelper;
 import kr.panda.bot.utils.EmojiContainer;
-import kr.panda.bot.utils.Util;
+import kr.panda.bot.utils.PPCalculator;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.interactions.InteractionHook;
@@ -96,10 +96,10 @@ public class ClanWarViewer extends BaseViewer {
 		mapEmbedBuilder.addField("Clan Info", clanInfoBuilder.toString(), false);
 
 		ModifiersRating modifiers = difficulty.getModifiersRating();
-		double targetPp = Util.calculateRequiredPp(mMapLeaderboardData.getAssociatedScores(), null, requiredPp);
-		double requiredAcc = Util.calculateAcc(targetPp, difficulty.getAccRating(), difficulty.getPassRating(), difficulty.getTechRating());
-		double requiredFsAcc = Util.calculateAcc(targetPp, modifiers.getFsAccRating(), modifiers.getFsPassRating(), modifiers.getFsTechRating());
-		double requiredSfAcc = Util.calculateAcc(targetPp, modifiers.getSfAccRating(), modifiers.getSfPassRating(), modifiers.getSfTechRating());
+		double targetPp = PPCalculator.calculateRequiredPp(mMapLeaderboardData.getAssociatedScores(), null, requiredPp);
+		double requiredAcc = PPCalculator.calculateAcc(targetPp, difficulty.getAccRating(), difficulty.getPassRating(), difficulty.getTechRating());
+		double requiredFsAcc = PPCalculator.calculateAcc(targetPp, modifiers.getFsAccRating(), modifiers.getFsPassRating(), modifiers.getFsTechRating());
+		double requiredSfAcc = PPCalculator.calculateAcc(targetPp, modifiers.getSfAccRating(), modifiers.getSfPassRating(), modifiers.getSfTechRating());
 		StringBuilder conquerInfoBuilder = new StringBuilder();
 		conquerInfoBuilder.append(MessageFormat.format("Diff from #1: {0,number,#.##pp}\n", mMapData.getPp()));
 		conquerInfoBuilder.append(MessageFormat.format("New Play Required: "
@@ -117,12 +117,12 @@ public class ClanWarViewer extends BaseViewer {
 		double requiredPp = mMapLeaderboardData.getPp() - mMapData.getPp();
 		for (int i = mCurrentPage * 5; i < mCurrentPage * 5 + 5 && i < scoreList.size(); i++) {
 			AssociatedScore score = scoreList.get(i);
-			double targetPp = Util.calculateRequiredPp(scoreList, score, requiredPp);
+			double targetPp = PPCalculator.calculateRequiredPp(scoreList, score, requiredPp);
 			Difficulty difficulty = mMapData.getLeaderboard().getDifficulty();
 			ModifiersRating modifiers = difficulty.getModifiersRating();
-			double requiredAcc = Util.calculateAcc(targetPp, difficulty.getAccRating(), difficulty.getPassRating(), difficulty.getTechRating());
-			double requiredFsAcc = Util.calculateAcc(targetPp, modifiers.getFsAccRating(), modifiers.getFsPassRating(), modifiers.getFsTechRating());
-			double requiredSfAcc = Util.calculateAcc(targetPp, modifiers.getSfAccRating(), modifiers.getSfPassRating(), modifiers.getSfTechRating());
+			double requiredAcc = PPCalculator.calculateAcc(targetPp, difficulty.getAccRating(), difficulty.getPassRating(), difficulty.getTechRating());
+			double requiredFsAcc = PPCalculator.calculateAcc(targetPp, modifiers.getFsAccRating(), modifiers.getFsPassRating(), modifiers.getFsTechRating());
+			double requiredSfAcc = PPCalculator.calculateAcc(targetPp, modifiers.getSfAccRating(), modifiers.getSfPassRating(), modifiers.getSfTechRating());
 
 			StringBuilder playInfoBuilder = new StringBuilder();
 			int misses = score.getMissedNotes() + score.getBombCuts() + score.getBadCuts();
