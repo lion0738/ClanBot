@@ -42,10 +42,9 @@ public class ClanWarCommand implements ICommand {
 				.filter(option -> option.getName().equals(TAG_OPTION)).findFirst();
 		if (tagOption.isPresent()) {
 			clanTag = tagOption.get().getAsString();
-		} else if (hook.getInteraction().getGuild() != null &&
-				hook.getInteraction().getGuild().getId().equals("1274090597837180969")) {
-			// TODO - DB integration (maybe one day?)
-			clanTag = "TECH";
+		}
+		if (clanTag == null && hook.getInteraction().getGuild() != null) {
+			clanTag = BeatLeaderAPIHelper.getDefaultClanName(hook.getInteraction().getGuild().getId());
 		}
 
 		if (clanTag != null) {
