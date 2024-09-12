@@ -15,12 +15,12 @@ import kr.panda.bot.object.ClanMapLeaderboardData;
 
 public class BeatLeaderAPIHelper {
 	private static final String BEATLEADER_API_URL = "https://api.beatleader.xyz";
-	private static final String CLAN_COMQUER_URL = BEATLEADER_API_URL + "/clan/{0}/maps?page=1&count=50&sortBy=toconquer";
+	private static final String CLAN_CONQUER_URL = BEATLEADER_API_URL + "/clan/{0}/maps?page=1&count=100&sortBy=toconquer";
 	private static final String CLAN_MAP_LEADERBOARD_URL = BEATLEADER_API_URL + "/leaderboard/clanRankings/{0}/clan/{1}?page=1&count=100";
 	private static Gson sGson = new Gson();
 
 	public static List<ClanMapData> getClanMaps(String clanId) {
-		String url = MessageFormat.format(CLAN_COMQUER_URL, clanId);
+		String url = MessageFormat.format(CLAN_CONQUER_URL, clanId);
 		ClanConquerResponse response = getObjectFromAPI(url, ClanConquerResponse.class);
 		return response.getData();
 	}
