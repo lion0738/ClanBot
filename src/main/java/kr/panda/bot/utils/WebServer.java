@@ -10,7 +10,8 @@ public class WebServer {
 	private static HttpServer mServer;
 
 	public static void initialize(ScheduledExecutorService worker) {
-		InetSocketAddress addr = new InetSocketAddress(80);
+		int port = Integer.parseInt(System.getenv("PORT"));
+		InetSocketAddress addr = new InetSocketAddress(port);
 		try {
 			mServer = HttpServer.create(addr, 0);
 			//mServer.createContext("/register", (exchange) -> BungieAPIHelper.register(exchange));
