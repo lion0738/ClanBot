@@ -63,7 +63,8 @@ public class BeatLeaderAPIHelper {
 	public static List<ClanMapData> getClanMaps(String clanId) {
 		String url = MessageFormat.format(CLAN_CONQUER_URL, clanId);
 		ClanConquerResponse response = getObjectFromAPI(url, ClanConquerResponse.class);
-		return response.getData();
+		List<ClanMapData> result = response == null ? null : response.getData();
+		return result;
 	}
 
 	public static ClanMapLeaderboardData getClanMapLeaderboard(String clanId, String leaderboardId) {

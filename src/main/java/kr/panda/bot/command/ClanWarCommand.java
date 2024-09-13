@@ -53,6 +53,9 @@ public class ClanWarCommand implements ICommand {
 				String ownerId = hook.getInteraction().getUser().getId();
 				IViewer viewer = new ClanWarSelector(callback, ownerId, mapData);
 				viewer.updateMessage(hook, true);
+			} else {
+				hook.editOriginal("The clan tag may be invalid or there could be a server issue. "
+						+ "Please try again later or contact bot developer if the problem persists.").queue();
 			}
 		} else {
 			hook.editOriginal("Clan Tag Required").queue(
