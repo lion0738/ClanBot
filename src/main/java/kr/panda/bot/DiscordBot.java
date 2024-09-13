@@ -83,7 +83,6 @@ public class DiscordBot extends ListenerAdapter {
 
 		DatabaseHelper.initialize();
 		BeatLeaderAPIHelper.initialize();
-		ClanWarNotifier.initialize(mBackgroundWorker);
 
 		List<GatewayIntent> intents = new ArrayList<GatewayIntent>();
 		intents.add(GatewayIntent.DIRECT_MESSAGES);

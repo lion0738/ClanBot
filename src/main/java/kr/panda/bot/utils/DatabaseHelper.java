@@ -38,8 +38,6 @@ public class DatabaseHelper {
 	static {
 		TABLE_COLUMN_MAP.put("ClanList", Arrays.asList(
 				new String[]{"GuildId", "ClanTag"}));
-		TABLE_COLUMN_MAP.put("ClanWarNotifyChannel", Arrays.asList(
-				new String[]{"Id", "ChannelId", "ClanTag"}));
 	}
 
 	private static void createTable(String tableName, String keyName, ScalarAttributeType attrType) {
@@ -62,7 +60,6 @@ public class DatabaseHelper {
 
 	public static void initialize() {
 		createTable("ClanList", "ChannelId", ScalarAttributeType.S);
-		createTable("ClanWarNotifyChannel", "Id", ScalarAttributeType.S);
 	}
 
 	private static String getAttributeValue(AttributeValue value) {

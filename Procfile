@@ -1,1 +1,1 @@
-web: java -jar target/ClanBot-0.0.1-SNAPSHOT-jar-with-dependencies.jar
+worker: java -jar target/ClanBot-0.0.1-SNAPSHOT-jar-with-dependencies.jar
