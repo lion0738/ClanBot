@@ -14,7 +14,7 @@ import net.dv8tion.jda.api.interactions.commands.OptionType;
 import net.dv8tion.jda.api.interactions.commands.build.Commands;
 import net.dv8tion.jda.api.interactions.commands.build.SlashCommandData;
 
-public class SetGuildClan implements ICommand {
+public class SetGuildClanCommand implements ICommand {
 	public static final String COMMAND = "setclan";
 	public static final String TAG_OPTION = "clantag";
 
@@ -25,7 +25,7 @@ public class SetGuildClan implements ICommand {
 
 	@Override
 	public SlashCommandData getCommandData() {
-		return Commands.slash(COMMAND, "Set the default clan name to be used in this server.")
+		return Commands.slash(COMMAND, "Set the default clan tag to be used for commands on this server.")
 				.addOption(OptionType.STRING, TAG_OPTION, "Tag of the clan (ex. TECH), leave the field empty to clear the setting.");
 	}
 
