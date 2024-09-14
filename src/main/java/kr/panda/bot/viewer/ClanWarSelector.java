@@ -8,21 +8,23 @@ import java.util.List;
 import kr.panda.bot.object.Clan;
 import kr.panda.bot.object.ClanMapData;
 import kr.panda.bot.object.Difficulty;
+import kr.panda.bot.object.Player;
 import kr.panda.bot.object.Song;
+import kr.panda.bot.utils.BeatLeaderAPIHelper;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.interactions.InteractionHook;
 
 public class ClanWarSelector extends Selector<ClanMapData> {
 	private static final String CLAN_URL = "https://beatleader.xyz/clan/{0}";
-	private Clan mClan; 
+	private Clan mClan;
+	private List<Player> mClanUsers;
 
 	public ClanWarSelector(Callback callback, String ownerId, List<ClanMapData> mapData) {
 		super(callback, ownerId, mapData);
 
-		if (mapData.size() > 0) {
-			mClan = mapData.get(0).getClan();
-		}
+		mClan = mapData.get(0).getClan();
+		mClanUsers = BeatLeaderAPIHelper.getClanUsers(mClan.getTag());
 	}
 
 	@Override
@@ -71,7 +73,7 @@ public class ClanWarSelector extends Selector<ClanMapData> {
 
 	@Override
 	protected void onSelected(InteractionHook hook, ClanMapData mapData) {
-		IViewer viewer = new ClanWarViewer(mCallback, hook, mapData);
+		IViewer viewer = new ClanWarViewer(mCallback, hook, mapData, mClanUsers);
 		viewer.updateMessage(hook, true);
 	}
 }

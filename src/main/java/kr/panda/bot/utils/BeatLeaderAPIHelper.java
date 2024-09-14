@@ -10,15 +10,19 @@ import java.util.List;
 import java.util.Map;
 
 import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 
-import kr.panda.bot.object.ClanConquerResponse;
 import kr.panda.bot.object.ClanMapData;
 import kr.panda.bot.object.ClanMapLeaderboardData;
+import kr.panda.bot.object.Player;
+import kr.panda.bot.object.ServerResponse;
 
 public class BeatLeaderAPIHelper {
 	private static final String BEATLEADER_API_URL = "https://api.beatleader.xyz";
 	private static final String CLAN_CONQUER_URL = BEATLEADER_API_URL + "/clan/{0}/maps?page=1&count=100&sortBy=toconquer";
+	private static final String CLAN_USER_URL = BEATLEADER_API_URL + "/clan/{0}?page=1&count=100&primary=true";
 	private static final String CLAN_MAP_LEADERBOARD_URL = BEATLEADER_API_URL + "/leaderboard/clanRankings/{0}/clan/{1}?page=1&count=100";
+
 	private static Gson sGson = new Gson();
 
 	private static Map<String, String> sGuildClanMap;
@@ -60,9 +64,18 @@ public class BeatLeaderAPIHelper {
 		return sGuildClanMap.get(guildId);
 	}
 
+	public static List<Player> getClanUsers(String clanId) {
+		String url = MessageFormat.format(CLAN_USER_URL, clanId);
+		TypeToken<ServerResponse<Player>> returnType = new TypeToken<ServerResponse<Player>>() {};
+		ServerResponse<Player> response = getObjectFromAPI(url, returnType);
+		List<Player> result = response == null ? null : response.getData();
+		return result;
+	}
+
 	public static List<ClanMapData> getClanMaps(String clanId) {
 		String url = MessageFormat.format(CLAN_CONQUER_URL, clanId);
-		ClanConquerResponse response = getObjectFromAPI(url, ClanConquerResponse.class);
+		TypeToken<ServerResponse<ClanMapData>> returnType = new TypeToken<ServerResponse<ClanMapData>>() {};
+		ServerResponse<ClanMapData> response = getObjectFromAPI(url, returnType);
 		List<ClanMapData> result = response == null ? null : response.getData();
 		return result;
 	}
@@ -71,6 +84,11 @@ public class BeatLeaderAPIHelper {
 		String url = MessageFormat.format(CLAN_MAP_LEADERBOARD_URL, leaderboardId, clanId);
 		ClanMapLeaderboardData response = getObjectFromAPI(url, ClanMapLeaderboardData.class);
 		return response;
+	}
+
+	private static <T> T getObjectFromAPI(String url, TypeToken<T> typeToken) {
+		String response = getStringFromApi(url);
+		return sGson.fromJson(response, typeToken.getType());
 	}
 
 	private static <T> T getObjectFromAPI(String url, Class<T> clazz) {

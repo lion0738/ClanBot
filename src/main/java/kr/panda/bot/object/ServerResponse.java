@@ -4,18 +4,18 @@ import java.util.List;
 
 import com.google.gson.annotations.SerializedName;
 
-public class ClanConquerResponse {
+public class ServerResponse<T> {
 	@SerializedName("metadata")
 	private Metadata mMetadata;
 
 	@SerializedName("data")
-	private List<ClanMapData> mData;
+	private List<T> mData;
 
 	public Metadata getMetadata() {
 		return mMetadata;
 	}
 
-	public List<ClanMapData> getData() {
+	public List<T> getData() {
 		return mData;
 	}
 }
