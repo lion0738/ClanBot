@@ -26,7 +26,7 @@ public class ClanWarCommand implements ICommand {
 
 	@Override
 	public SlashCommandData getCommandData() {
-		return Commands.slash(COMMAND, "Clan war info")
+		return Commands.slash(COMMAND, "Displays information related to the Clan War.")
 				.addOption(OptionType.STRING, TAG_OPTION, "Tag of the clan (ex. TECH)");
 	}
 
