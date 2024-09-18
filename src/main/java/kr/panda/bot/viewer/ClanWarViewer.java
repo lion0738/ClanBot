@@ -98,7 +98,7 @@ public class ClanWarViewer extends BaseViewer {
 		mapEmbedBuilder.setThumbnail(song.getCoverImage());
 		mapEmbedBuilder.setTitle(MessageFormat.format("{0} - {1} {2}", song.getName(), difficulty.getModeName(),
 				difficulty.getDifficultyName()));
-		mapEmbedBuilder.setUrl(MessageFormat.format(BEATSAVER_URL, song.getId().substring(0, 5)));
+		mapEmbedBuilder.setUrl(MessageFormat.format(BEATSAVER_URL, song.getId().replace("x", "")));
 
 		double requiredPp = mMapLeaderboardData.getPp() - mMapData.getPp();
 		StringBuilder mapInfoBuilder = new StringBuilder();
