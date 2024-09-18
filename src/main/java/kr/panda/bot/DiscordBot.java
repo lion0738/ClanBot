@@ -192,7 +192,6 @@ public class DiscordBot extends ListenerAdapter {
 	public void onSlashCommandInteraction(SlashCommandInteractionEvent event) {
 		try {
 			if (event.getChannel() != null) {
-				logSlashCommand(event);
 				IModerator moderator = mModerators.get(event.getChannel().getId());
 				boolean prohibited = moderator != null;
 				mSlash.onSlashCommandInteraction(event, prohibited);
@@ -204,19 +203,6 @@ public class DiscordBot extends ListenerAdapter {
 			e.printStackTrace();
 		} catch (IllegalArgumentException e) {
 			e.printStackTrace();
-		}
-	}
-
-	private void logSlashCommand(SlashCommandInteractionEvent event) {
-		StringBuilder options = new StringBuilder();
-		event.getOptions().forEach(option -> options.append(" " + option));
-		if (event.isFromGuild()) {
-			System.out.println(String.format("%s/%s/%s - /%s%s",
-					event.getGuild().getName(), event.getChannel().getName(),
-					event.getUser().getName(), event.getFullCommandName(), options.toString()));
-		} else {
-			System.out.println(String.format("개인 메시지/%s - /%s%s",
-					event.getUser().getName(), event.getFullCommandName(), options.toString()));
 		}
 	}
 
