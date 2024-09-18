@@ -20,6 +20,7 @@ import kr.panda.bot.object.ServerResponse;
 public class BeatLeaderAPIHelper {
 	private static final String BEATLEADER_API_URL = "https://api.beatleader.xyz";
 	private static final String CLAN_CONQUER_URL = BEATLEADER_API_URL + "/clan/{0}/maps?page=1&count=100&sortBy=toconquer";
+	private static final String CLAN_HOLD_URL = BEATLEADER_API_URL + "/clan/{0}/maps?page=1&count=100&sortBy=tohold";
 	private static final String CLAN_USER_URL = BEATLEADER_API_URL + "/clan/{0}?page=1&count=100&primary=true";
 	private static final String CLAN_MAP_LEADERBOARD_URL = BEATLEADER_API_URL + "/leaderboard/clanRankings/{0}/clan/{1}?page=1&count=100";
 
@@ -92,13 +93,27 @@ public class BeatLeaderAPIHelper {
 	}
 
 	/**
-	 * Gets the list of clan maps for a given clan ID.
+	 * Gets the list of maps to conquer for a given clan ID.
 	 * 
 	 * @param clanId  the ID of the clan
 	 * @return the list of clan maps
 	 */
-	public static List<ClanMapData> getClanMaps(String clanId) {
+	public static List<ClanMapData> getClanConquerMaps(String clanId) {
 		String url = MessageFormat.format(CLAN_CONQUER_URL, clanId);
+		TypeToken<ServerResponse<ClanMapData>> returnType = new TypeToken<ServerResponse<ClanMapData>>() {};
+		ServerResponse<ClanMapData> response = getObjectFromAPI(url, returnType);
+		List<ClanMapData> result = response == null ? null : response.getData();
+		return result;
+	}
+
+	/**
+	 * Gets the list of maps to hold for a given clan ID.
+	 * 
+	 * @param clanId  the ID of the clan
+	 * @return the list of clan maps
+	 */
+	public static List<ClanMapData> getClanHoldMaps(String clanId) {
+		String url = MessageFormat.format(CLAN_HOLD_URL, clanId);
 		TypeToken<ServerResponse<ClanMapData>> returnType = new TypeToken<ServerResponse<ClanMapData>>() {};
 		ServerResponse<ClanMapData> response = getObjectFromAPI(url, returnType);
 		List<ClanMapData> result = response == null ? null : response.getData();

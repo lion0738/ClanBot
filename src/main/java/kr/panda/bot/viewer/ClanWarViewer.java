@@ -118,21 +118,25 @@ public class ClanWarViewer extends BaseViewer {
 		clanInfoBuilder.append(MessageFormat.format("Total Score: {0}\n", mMapData.getTotalScore()));
 		mapEmbedBuilder.addField("Clan Info", clanInfoBuilder.toString(), false);
 
-		ModifiersRating modifiers = difficulty.getModifiersRating();
-		double targetPp = PPCalculator.calculateRequiredPp(mMapLeaderboardData.getAssociatedScores(), null, requiredPp);
-		double requiredAcc = PPCalculator.calculateAcc(targetPp, difficulty.getAccRating(), difficulty.getPassRating(),
-				difficulty.getTechRating());
-		double requiredFsAcc = PPCalculator.calculateAcc(targetPp, modifiers.getFsAccRating(),
-				modifiers.getFsPassRating(), modifiers.getFsTechRating());
-		double requiredSfAcc = PPCalculator.calculateAcc(targetPp, modifiers.getSfAccRating(),
-				modifiers.getSfPassRating(), modifiers.getSfTechRating());
-		StringBuilder conquerInfoBuilder = new StringBuilder();
-		conquerInfoBuilder.append(MessageFormat.format("Diff from #1: {0,number,#.##pp}\n", mMapData.getPp()));
-		conquerInfoBuilder.append(MessageFormat.format(
-				"New Play Required: "
-						+ "{0,number,#.##pp} ({1,number,#.#}%, FS: {2,number,#.#}%, SF: {3,number,#.#}%)\n",
-				targetPp, requiredAcc * 100, requiredFsAcc * 100, requiredSfAcc * 100));
-		mapEmbedBuilder.addField("To Conquer", conquerInfoBuilder.toString(), false);
+		if (mMapData.getPp() < 0) {
+			ModifiersRating modifiers = difficulty.getModifiersRating();
+			double targetPp = PPCalculator.calculateRequiredPp(mMapLeaderboardData.getAssociatedScores(), null, requiredPp);
+			double requiredAcc = PPCalculator.calculateAcc(targetPp, difficulty.getAccRating(), difficulty.getPassRating(),
+					difficulty.getTechRating());
+			double requiredFsAcc = PPCalculator.calculateAcc(targetPp, modifiers.getFsAccRating(),
+					modifiers.getFsPassRating(), modifiers.getFsTechRating());
+			double requiredSfAcc = PPCalculator.calculateAcc(targetPp, modifiers.getSfAccRating(),
+					modifiers.getSfPassRating(), modifiers.getSfTechRating());
+			StringBuilder conquerInfoBuilder = new StringBuilder();
+			conquerInfoBuilder.append(MessageFormat.format("Diff from #1: {0,number,#.##pp}\n", mMapData.getPp()));
+			conquerInfoBuilder.append(MessageFormat.format(
+					"New Play Required: "
+							+ "{0,number,#.##pp} ({1,number,#.#}%, FS: {2,number,#.#}%, SF: {3,number,#.#}%)\n",
+					targetPp, requiredAcc * 100, requiredFsAcc * 100, requiredSfAcc * 100));
+			mapEmbedBuilder.addField("To Conquer", conquerInfoBuilder.toString(), false);
+		} else {
+			mapEmbedBuilder.addField("To Hold", MessageFormat.format("Diff from #2: {0,number,#.##pp}\n", mMapData.getPp()), false);
+		}
 
 		return mapEmbedBuilder.build();
 	}
@@ -166,16 +170,19 @@ public class ClanWarViewer extends BaseViewer {
 			}
 			playScoreBuilder.append(MessageFormat.format(") - <t:{0,number,#}>\n", score.getTimeset()));
 
-			ModifiersRating modifiers = difficulty.getModifiersRating();
-			double requiredAcc = PPCalculator.calculateAcc(targetPp, difficulty.getAccRating(),
-					difficulty.getPassRating(), difficulty.getTechRating());
-			double requiredFsAcc = PPCalculator.calculateAcc(targetPp, modifiers.getFsAccRating(),
-					modifiers.getFsPassRating(), modifiers.getFsTechRating());
-			double requiredSfAcc = PPCalculator.calculateAcc(targetPp, modifiers.getSfAccRating(),
-					modifiers.getSfPassRating(), modifiers.getSfTechRating());
-			playScoreBuilder.append(MessageFormat.format(
-					"To Conquer: {0,number,#.##}pp ({1,number,#.#}%, FS: {2,number,#.#}%, SF: {3,number,#.#}%)",
-					targetPp, requiredAcc * 100, requiredFsAcc * 100, requiredSfAcc * 100));
+			if (mMapData.getPp() < 0) {
+				ModifiersRating modifiers = difficulty.getModifiersRating();
+				double requiredAcc = PPCalculator.calculateAcc(targetPp, difficulty.getAccRating(),
+						difficulty.getPassRating(), difficulty.getTechRating());
+				double requiredFsAcc = PPCalculator.calculateAcc(targetPp, modifiers.getFsAccRating(),
+						modifiers.getFsPassRating(), modifiers.getFsTechRating());
+				double requiredSfAcc = PPCalculator.calculateAcc(targetPp, modifiers.getSfAccRating(),
+						modifiers.getSfPassRating(), modifiers.getSfTechRating());
+				playScoreBuilder.append(MessageFormat.format(
+						"To Conquer: {0,number,#.##}pp ({1,number,#.#}%, FS: {2,number,#.#}%, SF: {3,number,#.#}%)",
+						targetPp, requiredAcc * 100, requiredFsAcc * 100, requiredSfAcc * 100));
+			}
+
 			clanLeaderboardEmbedBuilder.addField(
 					MessageFormat.format("#{0} {1}", score.getRank(), playerInfoBuilder.toString()),
 					playScoreBuilder.toString(), false);

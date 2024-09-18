@@ -48,7 +48,7 @@ public class ClanWarCommand implements ICommand {
 		}
 
 		if (clanTag != null) {
-			List<ClanMapData> mapData = BeatLeaderAPIHelper.getClanMaps(clanTag);
+			List<ClanMapData> mapData = BeatLeaderAPIHelper.getClanConquerMaps(clanTag);
 			if (mapData != null && !mapData.isEmpty()) {
 				String ownerId = hook.getInteraction().getUser().getId();
 				IViewer viewer = new ClanWarSelector(callback, ownerId, mapData);

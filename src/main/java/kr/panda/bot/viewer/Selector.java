@@ -1,5 +1,6 @@
 package kr.panda.bot.viewer;
 
+import java.awt.Color;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -19,6 +20,7 @@ public abstract class Selector<T> extends BaseViewer {
 	private String mOwnerId;
 	private int mMaxPage;
 	private int mCurrentPage;
+	private Color mColor;
 
 	public Selector(Callback callback, String id, List<T> list) {
 		super(callback);
@@ -43,6 +45,10 @@ public abstract class Selector<T> extends BaseViewer {
 
 		if (mMaxPage > 0) {
 			eb.setFooter("(" + (mCurrentPage + 1) + "/" + (mMaxPage + 1) + ")", null);
+		}
+
+		if (mColor != null) {
+			eb.setColor(mColor);
 		}
 
 		return eb.build();
@@ -106,5 +112,15 @@ public abstract class Selector<T> extends BaseViewer {
 			}
 			break;
 		}
+	}
+
+	protected void setList(List<T> list) {
+		mList = list;
+		mCurrentPage = 0;
+		mMaxPage = (mList.size() - 1) / 5;
+	}
+
+	protected void setColor(Color color) {
+		mColor = color;
 	}
 }
