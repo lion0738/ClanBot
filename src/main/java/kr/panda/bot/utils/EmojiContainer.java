@@ -4,6 +4,9 @@ import kr.panda.bot.DiscordBot;
 import net.dv8tion.jda.api.entities.emoji.Emoji;
 import net.dv8tion.jda.api.entities.emoji.RichCustomEmoji;
 
+/**
+ * The EmojiContainer class contains constants and methods related to emojis.
+ */
 public class EmojiContainer {
 	public static final String STRING_ARROW_UP = "⬆";
 	public static final String STRING_ARROW_DOWN = "⬇";
@@ -57,6 +60,12 @@ public class EmojiContainer {
 	public static final Emoji EMOJI_COMPLETED = Emoji.fromUnicode(STRING_COMPLETED);
 	public static final Emoji EMOJI_NOT_COMPLETED = Emoji.fromUnicode(STRING_NOT_COMPLETED);
 
+	/**
+	 * Retrieves a custom emoji by its ID.
+	 *
+	 * @param id The ID of the emoji.
+	 * @return The RichCustomEmoji object representing the emoji, or null if not found.
+	 */
 	public static RichCustomEmoji getEmoji(String id) {
 		if (DiscordBot.getJDA() == null)
 			return null;
@@ -64,6 +73,12 @@ public class EmojiContainer {
 		return DiscordBot.getJDA().getEmojiById(id);
 	}
 
+	/**
+	 * Retrieves an emoji object representing a number.
+	 *
+	 * @param num The number for which to retrieve the emoji.
+	 * @return The Emoji object representing the number, or null if not found.
+	 */
 	public static Emoji getNumberEmoji(int num) {
 		Emoji result;
 		switch (num) {

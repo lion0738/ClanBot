@@ -43,6 +43,13 @@ public class BeatLeaderAPIHelper {
 		}
 	}
 
+	/**
+	 * Sets the default clan name for a guild.
+	 * 
+	 * @param guildId  the ID of the guild
+	 * @param clanTag  the clan tag to set as the default
+	 * @return true if the default clan name was set successfully, false otherwise
+	 */
 	public static boolean setDefaultClanName(String guildId, String clanTag) {
 		if (clanTag != null) {
 			Map<String, String> target = new HashMap<>();
@@ -60,10 +67,22 @@ public class BeatLeaderAPIHelper {
 		return false;
 	}
 
+	/**
+	 * Gets the default clan name for a guild.
+	 * 
+	 * @param guildId  the ID of the guild
+	 * @return the default clan name, or null if not set
+	 */
 	public static String getDefaultClanName(String guildId) {
 		return sGuildClanMap.get(guildId);
 	}
 
+	/**
+	 * Gets the list of clan users for a given clan ID.
+	 * 
+	 * @param clanId  the ID of the clan
+	 * @return the list of clan users
+	 */
 	public static List<Player> getClanUsers(String clanId) {
 		String url = MessageFormat.format(CLAN_USER_URL, clanId);
 		TypeToken<ServerResponse<Player>> returnType = new TypeToken<ServerResponse<Player>>() {};
@@ -72,6 +91,12 @@ public class BeatLeaderAPIHelper {
 		return result;
 	}
 
+	/**
+	 * Gets the list of clan maps for a given clan ID.
+	 * 
+	 * @param clanId  the ID of the clan
+	 * @return the list of clan maps
+	 */
 	public static List<ClanMapData> getClanMaps(String clanId) {
 		String url = MessageFormat.format(CLAN_CONQUER_URL, clanId);
 		TypeToken<ServerResponse<ClanMapData>> returnType = new TypeToken<ServerResponse<ClanMapData>>() {};
@@ -80,6 +105,13 @@ public class BeatLeaderAPIHelper {
 		return result;
 	}
 
+	/**
+	 * Gets the leaderboard data for a specific clan and leaderboard ID.
+	 * 
+	 * @param clanId        the ID of the clan
+	 * @param leaderboardId the ID of the leaderboard
+	 * @return the leaderboard data
+	 */
 	public static ClanMapLeaderboardData getClanMapLeaderboard(String clanId, String leaderboardId) {
 		String url = MessageFormat.format(CLAN_MAP_LEADERBOARD_URL, leaderboardId, clanId);
 		ClanMapLeaderboardData response = getObjectFromAPI(url, ClanMapLeaderboardData.class);

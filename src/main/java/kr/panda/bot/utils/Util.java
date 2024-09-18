@@ -14,6 +14,11 @@ import net.dv8tion.jda.api.exceptions.ErrorResponseException;
 public class Util {
 	private static MultiKeyMap<String, String> sNameMap = new MultiKeyMap<>();
 
+	/**
+	 * Generates a random hash using SHA-256 algorithm.
+	 *
+	 * @return The generated random hash.
+	 */
 	public static String getRandomHash() {
 		String result = null;
 		try {
@@ -34,15 +39,29 @@ public class Util {
 		return result;
 	}
 
+	/**
+	 * Gets the username of a user based on the channel ID and user ID.
+	 *
+	 * @param channelId The ID of the channel.
+	 * @param id        The ID of the user.
+	 * @return The username of the user.
+	 */
 	public static String getUserName(String channelId, String id) {
 		TextChannel channel = DiscordBot.getJDA().getTextChannelById(channelId);
 		if (channel != null) {
 			return getUserName(channel, id);
 		} else {
-			return "알 수 없음";
+			return "Unknown User";
 		}
 	}
 
+	/**
+	 * Gets the username of a user based on the channel and user ID.
+	 *
+	 * @param channel The text channel.
+	 * @param id      The ID of the user.
+	 * @return The username of the user.
+	 */
 	public static String getUserName(TextChannel channel, String id) {
 		String memberName = sNameMap.get(channel.getGuild().getId(), id);
 		if (memberName == null) {
@@ -62,7 +81,7 @@ public class Util {
 			if (memberName != null) {
 				sNameMap.put(channel.getGuild().getId(), id, memberName);
 			} else {
-				memberName = "알 수 없음";
+				memberName = "Unknown User";
 			}
 		}
 
