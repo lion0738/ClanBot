@@ -12,6 +12,7 @@ import java.util.Map;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
+import kr.panda.bot.object.Clan;
 import kr.panda.bot.object.ClanMapData;
 import kr.panda.bot.object.ClanMapLeaderboardData;
 import kr.panda.bot.object.Player;
@@ -84,12 +85,11 @@ public class BeatLeaderAPIHelper {
 	 * @param clanId  the ID of the clan
 	 * @return the list of clan users
 	 */
-	public static List<Player> getClanUsers(String clanId) {
+	public static ServerResponse<Player, Clan> getClanUsers(String clanId) {
 		String url = MessageFormat.format(CLAN_USER_URL, clanId);
-		TypeToken<ServerResponse<Player>> returnType = new TypeToken<ServerResponse<Player>>() {};
-		ServerResponse<Player> response = getObjectFromAPI(url, returnType);
-		List<Player> result = response == null ? null : response.getData();
-		return result;
+		TypeToken<ServerResponse<Player, Clan>> returnType = new TypeToken<ServerResponse<Player, Clan>>() {};
+		ServerResponse<Player, Clan> response = getObjectFromAPI(url, returnType);
+		return response;
 	}
 
 	/**
@@ -98,12 +98,11 @@ public class BeatLeaderAPIHelper {
 	 * @param clanId  the ID of the clan
 	 * @return the list of clan maps
 	 */
-	public static List<ClanMapData> getClanConquerMaps(String clanId) {
+	public static ServerResponse<ClanMapData, Clan> getClanConquerMaps(String clanId) {
 		String url = MessageFormat.format(CLAN_CONQUER_URL, clanId);
-		TypeToken<ServerResponse<ClanMapData>> returnType = new TypeToken<ServerResponse<ClanMapData>>() {};
-		ServerResponse<ClanMapData> response = getObjectFromAPI(url, returnType);
-		List<ClanMapData> result = response == null ? null : response.getData();
-		return result;
+		TypeToken<ServerResponse<ClanMapData, Clan>> returnType = new TypeToken<ServerResponse<ClanMapData, Clan>>() {};
+		ServerResponse<ClanMapData, Clan> response = getObjectFromAPI(url, returnType);
+		return response;
 	}
 
 	/**
@@ -112,12 +111,11 @@ public class BeatLeaderAPIHelper {
 	 * @param clanId  the ID of the clan
 	 * @return the list of clan maps
 	 */
-	public static List<ClanMapData> getClanHoldMaps(String clanId) {
+	public static ServerResponse<ClanMapData, Clan> getClanHoldMaps(String clanId) {
 		String url = MessageFormat.format(CLAN_HOLD_URL, clanId);
-		TypeToken<ServerResponse<ClanMapData>> returnType = new TypeToken<ServerResponse<ClanMapData>>() {};
-		ServerResponse<ClanMapData> response = getObjectFromAPI(url, returnType);
-		List<ClanMapData> result = response == null ? null : response.getData();
-		return result;
+		TypeToken<ServerResponse<ClanMapData, Clan>> returnType = new TypeToken<ServerResponse<ClanMapData, Clan>>() {};
+		ServerResponse<ClanMapData, Clan> response = getObjectFromAPI(url, returnType);
+		return response;
 	}
 
 	/**

@@ -4,7 +4,9 @@ import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 
+import kr.panda.bot.object.Clan;
 import kr.panda.bot.object.ClanMapData;
+import kr.panda.bot.object.ServerResponse;
 import kr.panda.bot.utils.BeatLeaderAPIHelper;
 import kr.panda.bot.viewer.ClanWarSelector;
 import kr.panda.bot.viewer.IViewer;
@@ -48,10 +50,12 @@ public class ClanWarCommand implements ICommand {
 		}
 
 		if (clanTag != null) {
-			List<ClanMapData> mapData = BeatLeaderAPIHelper.getClanConquerMaps(clanTag);
-			if (mapData != null && !mapData.isEmpty()) {
+			ServerResponse<ClanMapData, Clan> clanData = BeatLeaderAPIHelper.getClanConquerMaps(clanTag);
+			Clan clan = clanData.getContainer();
+			List<ClanMapData> mapData = clanData.getData();
+			if (clan != null && mapData != null && !mapData.isEmpty()) {
 				String ownerId = hook.getInteraction().getUser().getId();
-				IViewer viewer = new ClanWarSelector(callback, ownerId, mapData);
+				IViewer viewer = new ClanWarSelector(callback, ownerId, clan, mapData);
 				viewer.updateMessage(hook, true);
 			} else {
 				hook.editOriginal("The clan tag may be invalid or there could be a server issue. "

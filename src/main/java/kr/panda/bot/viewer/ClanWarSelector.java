@@ -34,13 +34,14 @@ public class ClanWarSelector extends Selector<ClanMapData> {
 	private List<ClanMapData> mConquerMapList;
 	private List<ClanMapData> mHoldMapList;
 
-	public ClanWarSelector(Callback callback, String ownerId, List<ClanMapData> mapData) {
+	public ClanWarSelector(Callback callback, String ownerId, Clan clan,
+			List<ClanMapData> mapData) {
 		super(callback, ownerId, mapData);
 
 		mMode = MODE_CONQUER;
 		mConquerMapList = mapData;
-		mClan = mapData.get(0).getClan();
-		mClanUsers = BeatLeaderAPIHelper.getClanUsers(mClan.getTag());
+		mClan = clan;
+		mClanUsers = BeatLeaderAPIHelper.getClanUsers(mClan.getTag()).getData();
 
 		setColor(Color.RED);
 	}
@@ -101,7 +102,7 @@ public class ClanWarSelector extends Selector<ClanMapData> {
 
 	@Override
 	protected void onSelected(InteractionHook hook, ClanMapData mapData) {
-		IViewer viewer = new ClanWarViewer(mCallback, hook, mapData, mClanUsers);
+		IViewer viewer = new ClanWarViewer(mCallback, hook, mapData, mClan, mClanUsers);
 		viewer.updateMessage(hook, true);
 	}
 
@@ -129,7 +130,7 @@ public class ClanWarSelector extends Selector<ClanMapData> {
 		case BUTTON_ID_HOLD:
 			mMode = MODE_HOLD;
 			if (mHoldMapList == null) {
-				mHoldMapList = BeatLeaderAPIHelper.getClanHoldMaps(mClan.getTag());
+				mHoldMapList = BeatLeaderAPIHelper.getClanHoldMaps(mClan.getTag()).getData();
 			}
 			setList(mHoldMapList);
 			setColor(Color.GREEN);

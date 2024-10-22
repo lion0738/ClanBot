@@ -1,11 +1,13 @@
 package kr.panda.bot.viewer;
 
+import java.awt.Color;
 import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
 import kr.panda.bot.object.AssociatedScore;
+import kr.panda.bot.object.Clan;
 import kr.panda.bot.object.ClanMapData;
 import kr.panda.bot.object.ClanMapLeaderboardData;
 import kr.panda.bot.object.Difficulty;
@@ -38,6 +40,7 @@ public class ClanWarViewer extends BaseViewer {
 	private String mChannelId;
 	private String mOwnerId;
 	private ClanMapData mMapData;
+	private Clan mClan;
 	private List<Player> mClanUsers;
 	private ClanMapLeaderboardData mMapLeaderboardData;
 
@@ -45,14 +48,16 @@ public class ClanWarViewer extends BaseViewer {
 	private int mMaxPage;
 	private int mCurrentPage;
 
-	public ClanWarViewer(Callback callback, InteractionHook hook, ClanMapData mapData, List<Player> clanUsers) {
+	public ClanWarViewer(Callback callback, InteractionHook hook, ClanMapData mapData,
+			Clan clan, List<Player> clanUsers) {
 		super(callback);
 
 		mChannelId = hook.getInteraction().getChannelId();
 		mOwnerId = hook.getInteraction().getUser().getId();
 		mMapData = mapData;
+		mClan = clan;
 		mClanUsers = clanUsers;
-		mMapLeaderboardData = BeatLeaderAPIHelper.getClanMapLeaderboard(mMapData.getClan().getId(),
+		mMapLeaderboardData = BeatLeaderAPIHelper.getClanMapLeaderboard(mClan.getId(),
 				mMapData.getLeaderboardId());
 
 		mMaxPage = (mMapLeaderboardData.getAssociatedScores().size() - 1) / 5;
@@ -98,6 +103,7 @@ public class ClanWarViewer extends BaseViewer {
 		mapEmbedBuilder.setThumbnail(song.getCoverImage());
 		mapEmbedBuilder.setTitle(MessageFormat.format("{0} - {1} {2}", song.getName(), difficulty.getModeName(),
 				difficulty.getDifficultyName()));
+		mapEmbedBuilder.setColor(Color.decode(mMapData.getClan().getColor()));
 		mapEmbedBuilder.setUrl(MessageFormat.format(BEATSAVER_URL, song.getId().replace("x", "")));
 
 		double requiredPp = mMapLeaderboardData.getPp() - mMapData.getPp();
@@ -128,6 +134,8 @@ public class ClanWarViewer extends BaseViewer {
 			double requiredSfAcc = PPCalculator.calculateAcc(targetPp, modifiers.getSfAccRating(),
 					modifiers.getSfPassRating(), modifiers.getSfTechRating());
 			StringBuilder conquerInfoBuilder = new StringBuilder();
+			conquerInfoBuilder.append(MessageFormat.format("Captured by: {0} ({1})\n",
+					mMapData.getClan().getName(), mMapData.getClan().getTag()));
 			conquerInfoBuilder.append(MessageFormat.format("Diff from #1: {0,number,#.##pp}\n", mMapData.getPp()));
 			conquerInfoBuilder.append(MessageFormat.format(
 					"New Play Required: "
@@ -143,7 +151,9 @@ public class ClanWarViewer extends BaseViewer {
 
 	private MessageEmbed getClanLeaderboardEmbed() {
 		EmbedBuilder clanLeaderboardEmbedBuilder = new EmbedBuilder();
-		clanLeaderboardEmbedBuilder.setTitle("Clan Leaderboard");
+		clanLeaderboardEmbedBuilder.setTitle(
+				MessageFormat.format("{0} Clan Leaderboard", mClan.getTag()));
+		clanLeaderboardEmbedBuilder.setColor(Color.decode(mClan.getColor()));
 		List<AssociatedScore> scoreList = mMapLeaderboardData.getAssociatedScores();
 		double requiredPp = mMapLeaderboardData.getPp() - mMapData.getPp();
 		for (int i = mCurrentPage * 5; i < mCurrentPage * 5 + 5 && i < scoreList.size(); i++) {
@@ -197,6 +207,7 @@ public class ClanWarViewer extends BaseViewer {
 	private MessageEmbed getNonPlayedEmbed() {
 		EmbedBuilder nonPlayedEmbedBuilder = new EmbedBuilder();
 		nonPlayedEmbedBuilder.setTitle("Yet to Play (Top 9)");
+		nonPlayedEmbedBuilder.setColor(Color.decode(mClan.getColor()));
 		List<String> playedUsers = mMapLeaderboardData.getAssociatedScores().stream().map(score -> score.getPlayerId())
 				.collect(Collectors.toList());
 		mClanUsers.stream().filter(player -> !playedUsers.contains(player.getId())).limit(9)
