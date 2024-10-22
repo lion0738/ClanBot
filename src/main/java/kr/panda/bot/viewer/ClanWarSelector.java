@@ -7,6 +7,7 @@ import java.util.List;
 
 import kr.panda.bot.object.Clan;
 import kr.panda.bot.object.ClanMapData;
+import kr.panda.bot.object.ClanMapLeaderboardData;
 import kr.panda.bot.object.Difficulty;
 import kr.panda.bot.object.Player;
 import kr.panda.bot.object.Song;
@@ -102,7 +103,11 @@ public class ClanWarSelector extends Selector<ClanMapData> {
 
 	@Override
 	protected void onSelected(InteractionHook hook, ClanMapData mapData) {
-		IViewer viewer = new ClanWarViewer(mCallback, hook, mapData, mClan, mClanUsers);
+		ClanMapLeaderboardData mapLeaderboardData =
+				BeatLeaderAPIHelper.getClanMapLeaderboard(mClan.getId(),
+						mapData.getLeaderboardId());
+		IViewer viewer = new ClanWarViewer(mCallback, hook, mapData,
+				mapLeaderboardData, mClan, mClanUsers);
 		viewer.updateMessage(hook, true);
 	}
 

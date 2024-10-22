@@ -14,7 +14,6 @@ import kr.panda.bot.object.Difficulty;
 import kr.panda.bot.object.ModifiersRating;
 import kr.panda.bot.object.Player;
 import kr.panda.bot.object.Song;
-import kr.panda.bot.utils.BeatLeaderAPIHelper;
 import kr.panda.bot.utils.EmojiContainer;
 import kr.panda.bot.utils.PPCalculator;
 import net.dv8tion.jda.api.EmbedBuilder;
@@ -49,16 +48,15 @@ public class ClanWarViewer extends BaseViewer {
 	private int mCurrentPage;
 
 	public ClanWarViewer(Callback callback, InteractionHook hook, ClanMapData mapData,
-			Clan clan, List<Player> clanUsers) {
+			ClanMapLeaderboardData mapLeaderboardData, Clan clan, List<Player> clanUsers) {
 		super(callback);
 
 		mChannelId = hook.getInteraction().getChannelId();
 		mOwnerId = hook.getInteraction().getUser().getId();
 		mMapData = mapData;
+		mMapLeaderboardData = mapLeaderboardData;
 		mClan = clan;
 		mClanUsers = clanUsers;
-		mMapLeaderboardData = BeatLeaderAPIHelper.getClanMapLeaderboard(mClan.getId(),
-				mMapData.getLeaderboardId());
 
 		mMaxPage = (mMapLeaderboardData.getAssociatedScores().size() - 1) / 5;
 		mCurrentPage = 0;
